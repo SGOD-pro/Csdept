@@ -26,7 +26,7 @@ interface AdminAuth {
 	userPrefs: UserPrefs | null;
 	hydrated: boolean;
 	setHydrated(): void;
-	verifySession(): Promise<void>;
+	verifySession(): Promise<UserPrefs | null>;
 	logout(): Promise<{ success: boolean; error?: Error }>;
 	signInWithGoogle(): Promise<{ success: boolean; error?: Error }>;
 }
@@ -42,8 +42,9 @@ export const useAuthStore = create<AdminAuth>()(
 				set({ hydrated: true });
 			},
 
-			async verifySession() {
-				return new Promise<void>((resolve) => {
+			async verifySession(): Promise<UserPrefs | null> {
+				console.log("call");
+				return new Promise<UserPrefs | null>((resolve) => {
 					const unsubscribe = onAuthStateChanged(auth, async (user) => {
 						if (user) {
 							const userDocRef = doc(db, "users", user.uid);
@@ -54,29 +55,30 @@ export const useAuthStore = create<AdminAuth>()(
 								displayName: user.displayName!,
 								photoURL: user.photoURL!,
 							};
+							
 							if (userDoc.exists()) {
+								const userPrefs = userDoc.data() as UserPrefs;
 								set({
 									user: userDetails,
-									userPrefs: userDoc.data() as UserPrefs,
+									userPrefs,
 								});
-								if (userDoc.data()?.isAdmin) {
-									set({ user: null, userPrefs: null });
-								}
-								console.log(userDoc.data());
+									resolve(userPrefs);
 							} else {
 								set({ user: userDetails, userPrefs: null });
+								resolve(null);
 							}
 						} else {
 							console.log("no user");
 							set({ user: null, userPrefs: null });
+							resolve(null);
 						}
+						
 						set({ hydrated: true });
-						resolve();
+						unsubscribe();
 					});
-					return () => unsubscribe();
 				});
 			},
-
+			
 			async signInWithGoogle() {
 				const provider = new GoogleAuthProvider();
 				try {

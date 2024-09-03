@@ -1,5 +1,5 @@
 "use client";
-
+import { ScanQrCode } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -9,6 +9,15 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "@/hooks/use-toast";
 import { submit as formSubmit } from "@/hooks/FormSubmit";
@@ -16,7 +25,6 @@ import { Button } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -25,7 +33,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { formSchama, FormSchema } from "@/schema/formSchema";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -99,7 +106,7 @@ export default function InputForm() {
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className="gap-4 grid sm:grid-cols-2 items-center border p-3 rounded-md my-8 w-full"
+				className="gap-4 grid sm:grid-cols-2 items-end border p-3 rounded-md my-8 w-full"
 			>
 				{/* Email Field */}
 				<FormField
@@ -172,13 +179,38 @@ export default function InputForm() {
 					)}
 				/>
 
+				<div className="py-3">
+					<Dialog>
+						<DialogTrigger className="flex items-center gap-3">
+							<span className="">Tap to view the qrcode</span>
+							<Button variant={"outline"} size={"icon"} type="button">
+								{" "}
+								<ScanQrCode />
+							</Button>
+						</DialogTrigger>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle>Are you absolutely sure?</DialogTitle>
+								<DialogDescription>
+									This action cannot be undone. This will permanently delete
+									your account and remove your data from our servers.
+								</DialogDescription>
+							</DialogHeader>
+						</DialogContent>
+					</Dialog>
+				</div>
 				{/* Payment Photo Field */}
 				<FormField
 					control={form.control}
 					name="paymentPhoto"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Payment Photo URL</FormLabel>
+							<FormLabel>
+								Payment Photo {"  "}{" "}
+								<span className="text-rose-600 text-xs">
+									*Attach a screenshot of your payment.
+								</span>
+							</FormLabel>
 							<FormControl>
 								<FileInput
 									onChange={(file) => field.onChange(file)}
@@ -188,9 +220,6 @@ export default function InputForm() {
 								/>
 							</FormControl>
 							<FormMessage />
-							<FormDescription className="text-xs text-rose-600">
-								*Attach a screenshot of your payment.
-							</FormDescription>
 						</FormItem>
 					)}
 				/>

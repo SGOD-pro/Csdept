@@ -19,11 +19,14 @@ function Page() {
 
 	React.useEffect(() => {
 		async function verifySession() {
-			verify();
+			const response = await verify();
+			if (!response?.isVerified) {
+				router.push("/");
+			}
 		}
 		verifySession();
 	}, []);
-	if (!user || !userPrefs) {
+	if (!user || !userPrefs?.isVerified) {
 		router.push("/");
 		return null;
 	}
@@ -57,16 +60,14 @@ function Page() {
 
 			{userPrefs.isSubmitted ? (
 				<AnimatedGradientText className="p-4">
-				
-				<span
-				  className={cn(
-					`inline animate-gradient bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent text-3xl sm:text-5xl font-semibold`,
-				  )}
-				>
-				  Thank you for your participation
-				</span>
-				
-			  </AnimatedGradientText>
+					<span
+						className={cn(
+							`inline animate-gradient bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent text-3xl sm:text-5xl font-semibold`
+						)}
+					>
+						Thank you for your participation
+					</span>
+				</AnimatedGradientText>
 			) : (
 				<div className="mt-16 sm:mt-0 w-full sm:w-1/2 mx-auto">
 					<InputForm />

@@ -1,33 +1,41 @@
 "use client";
+import React, { useEffect, lazy,Suspense } from "react";
 import { motion } from "framer-motion";
 import { getAuthState, useAuthStore } from "../../store/authStore";
 import { Vortex } from "../components/ui/vortex";
-import HyperText from "@/components/magicui/hyper-text";
+const HyperText = lazy(() => import("@/components/magicui/hyper-text"));
 import { IconBrandGoogleFilled } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
 
 export default function Home() {
 	const { signInWithGoogle, verifySession } = getAuthState();
-	const { isVerified } = useAuthStore((state) => ({
+	const { isVerified, isAdmin } = useAuthStore((state) => ({
 		isVerified: state.userPrefs?.isVerified,
+		isAdmin: state.userPrefs?.isAdmin,
 	}));
 	const router = useRouter();
 
 	useEffect(() => {
 		async function verify() {
-			await verifySession();
-			if (isVerified) {
-				router.push("/home"); // Use `router` here instead of calling `useRouter` again
+			const respose = await verifySession();
+			if (respose?.isAdmin) {
+				router.push("/admin");
+			} else if (respose?.isVerified) {
+				router.push("/home");
 			}
 		}
-		verify();
-	}, [verifySession, isVerified, router]); // Include dependencies here
+		if (isAdmin) {
+			verify();
+		}
+	}, []);
 
-	// If already verified, redirect immediately
 	if (isVerified) {
 		router.push("/home");
-		return null; // Return null to prevent rendering before redirect
+		return null; 
+	}
+	if (isAdmin) {
+		router.push("/admin");
+		return null;
 	}
 
 	return (
@@ -40,16 +48,18 @@ export default function Home() {
 				className="flex items-center flex-col justify-center px-2 md:px-10 py-4 w-full h-full"
 			>
 				<div className=" rounded-lg flex items-center flex-col p-4 h-[70dvh] sm:w-2/3 justify-center">
-					<HyperText
-						className="text-4xl sm:text-5xl font-bold text-white "
-						text="The OG CS Dept"
-						duration={1.5}
-					/>
+				<Suspense fallback={<div className="animate-pulse h-[64px] w-72 rounded"></div>}>
+            <HyperText
+              className="text-4xl sm:text-5xl font-bold text-white"
+              text="The OG CS Dept"
+              duration={1.5}
+            />
+          </Suspense>
 					<motion.p
 						className="text-white text-sm md:text-2xl max-w-xl mt-6 text-center"
 						initial={{ opacity: 0, y: 50 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.5, ease: "easeOut", delay: 0.5 }}
+						transition={{ duration: 0.5, ease: "easeOut", delay: 0.5,staggerChildren:.5 }}
 					>
 						This is a deep dive into code. It&apos;ll push your limits, and
 						you&apos;ll emerge with skills that last a lifetime.
@@ -63,11 +73,11 @@ export default function Home() {
 						transition={{ duration: 0.5, ease: "easeOut", delay: 0.5 }}
 					>
 						<button
-							className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition duration-200 rounded-lg text-white shadow-[0px_2px_0px_0px_#FFFFFF40_inset] flex items-center gap-2"
+							className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition duration-200 rounded-lg text-white shadow-[0px_2px_0px_0px_#FFFFFF40_inset] flex items-center"
 							onClick={signInWithGoogle}
 						>
 							<IconBrandGoogleFilled />
-							<span className="ml-2">Google</span>
+							<span className="">oogle</span>
 						</button>
 					</motion.div>
 				</div>
