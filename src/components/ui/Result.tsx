@@ -227,7 +227,7 @@ export default function DataTableDemo() {
 			</>
 		);
 	});
-
+	HeaderComponent.displayName="HeaderComponent";
 	return (
 		<div className="w-full">
 			<div className="flex items-center justify-end sm:justify-normal px-2 sm:py-0 py-4">
