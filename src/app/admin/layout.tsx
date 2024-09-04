@@ -1,6 +1,6 @@
 "use client";
 import { SparklesCore } from "@/components/magicui/sparkels";
-import { useAuthStore } from "../../../store/authStore";
+import { useAuthStore } from "../../store/authStore";
 import { notFound } from "next/navigation";
 import React from "react";
 import { useRouter } from "next/navigation";

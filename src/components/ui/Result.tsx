@@ -1,7 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { CaretSortIcon, ChevronDownIcon } from "@radix-ui/react-icons";
+import {
+	CaretSortIcon,
+	ChevronDownIcon,
+	DotsHorizontalIcon,
+} from "@radix-ui/react-icons";
 import {
 	ColumnDef,
 	ColumnFiltersState,
@@ -14,7 +18,8 @@ import {
 	getSortedRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
-import { fetchAllRecords, Result } from "@/hooks/FormSubmit";
+import { Switch } from "@/components/ui/switch";
+import { fetchAllRecords, Result, togglePaid } from "@/hooks/FormSubmit";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -22,6 +27,8 @@ import {
 	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
 	DropdownMenuTrigger,
+	DropdownMenuItem,
+	DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
@@ -97,36 +104,60 @@ export const columns: ColumnDef<Result>[] = [
 		cell: ({ row }) => row.getValue("rollNo"),
 	},
 	{
-		accessorKey: "year",
+		accessorKey: "semister",
 		header: ({ column }) => {
 			return (
 				<Button
 					variant="ghost"
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 				>
-					Year
+					Semister
 					<CaretSortIcon className="ml-2 h-4 w-4" />
 				</Button>
 			);
 		},
-		cell: ({ row }) => row.getValue("year"),
+		cell: ({ row }) => row.getValue("semister"),
 	},
 	{
 		accessorKey: "qrcode",
 		header: "Screenshot",
 		cell: ({ row }) => {
-			<>
-				{row.getValue("qrcode")} ? (
-				<a
-					href={row.getValue("qrcode")}
-					target="_blank"
-					className="underline text-blue-500"
-				>
-					Preview
-				</a>
-				):(
-				<span>No QR Code</span>) ;
-			</>;
+			const qrcodeUrl = row.original.qrcode || null;
+
+			return (
+				<>
+					{qrcodeUrl ? (
+						<a
+							href={qrcodeUrl}
+							target="_blank"
+							className="underline text-blue-500"
+						>
+							Preview
+						</a>
+					) : (
+						<span>No QR Code</span>
+					)}
+				</>
+			);
+		},
+	},
+	{
+		header: "Paid",
+		cell: ({ row }) => {
+			const data = row.original;
+			const [disable, setdisable] = React.useState(false);
+			async function paid(e: boolean) {
+				setdisable(true);
+				data.isPaid = await togglePaid(data.docId, e);
+				setdisable(false);
+			}
+			return (
+				<Switch
+					checked={data.isPaid}
+					onCheckedChange={paid}
+					disabled={disable}
+				/>
+			);
 		},
 	},
 ];
@@ -171,20 +202,39 @@ export default function DataTableDemo() {
 	const HeaderComponent = React.memo(() => {
 		return (
 			<>
-				<div className="space-y-3 sm:space-y-0">
+				<div className="space-y-3 sm:space-y-0 flex gap-2">
 					<Input
 						placeholder="Filter name..."
 						value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
 						onChange={(event) =>
 							table.getColumn("name")?.setFilterValue(event.target.value)
 						}
-						className="max-w-sm"
+						className="max-w-sm min-w-72"
 					/>
 					<Select
 						onValueChange={(event) =>
-							table.getColumn("year")?.setFilterValue(event)
+							table.getColumn("semister")?.setFilterValue(event)
 						}
-						value={(table.getColumn("year")?.getFilterValue() as string) ?? ""}
+						value={
+							(table.getColumn("semister")?.getFilterValue() as string) ?? ""
+						}
+					>
+						<SelectTrigger>
+							<SelectValue placeholder="Mode" />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value=" ">All</SelectItem>
+							<SelectItem value="Online">Online</SelectItem>
+							<SelectItem value="Offline">Offline</SelectItem>
+						</SelectContent>
+					</Select>
+					<Select
+						onValueChange={(event) =>
+							table.getColumn("semister")?.setFilterValue(event)
+						}
+						value={
+							(table.getColumn("semister")?.getFilterValue() as string) ?? ""
+						}
 					>
 						<SelectTrigger>
 							<SelectValue placeholder="Semister" />
@@ -226,11 +276,12 @@ export default function DataTableDemo() {
 			</>
 		);
 	});
+
 	HeaderComponent.displayName = "HeaderComponent";
 	return (
 		<div className="w-full">
 			<div className="flex items-center justify-end sm:justify-normal px-2 sm:py-0 py-4">
-				<div className="gap-2 hidden sm:flex">
+				<div className="gap-2 hidden sm:flex justify-between w-full">
 					<HeaderComponent />
 				</div>
 				<Dialog>

@@ -43,7 +43,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 import React from "react";
-import { useAuthStore } from "../../../store/authStore";
+import { useAuthStore } from "../../store/authStore";
 import FileInput from "../ui/FileInput";
 import Image from "next/image";
 
@@ -86,23 +86,37 @@ export default function InputForm() {
 	});
 	const fileInputRef = React.useRef<HTMLInputElement>(null);
 	async function onSubmit(data: FormSchema) {
-		if (data.semister === "online"&&!data.paymentPhoto) {
+		// Validate the form data explicitly before proceeding
+		const parsedData = formSchema.safeParse(data);
+
+		if (!parsedData.success) {
+			// If validation fails, show the first error and return
+			const firstError = parsedData.error.errors[0];
+			toast({
+				title: "Error",
+				description: firstError.message,
+			});
+			return;
+		}
+
+		if (data.paymentMode === "Online" && !data.paymentPhoto) {
 			toast({
 				title: "Please add payment photo",
 				description: "Payment photo is required for online payment.",
 			});
-			
+			return; 
 		}
 		setDisable(true);
-		const resonse = await formSubmit(data);
-		if (resonse.success) {
+		const response = await formSubmit(data);
+
+		if (response.success) {
 			toast({
 				title: "Thank you!",
 				description: "Your entry has been recorded. Enjoy the event!",
 			});
 		} else {
 			toast({
-				title: "Sorry something went wrong!",
+				title: "Sorry, something went wrong!",
 				description: "Please try again later.",
 			});
 			setDisable(false);
@@ -200,7 +214,13 @@ export default function InputForm() {
 							<DialogHeader>
 								<DialogTitle>Rs: 100</DialogTitle>
 								<DialogDescription>
-									<Image src={"/qrcode.jpg"} alt="qrcode" width={450} height={580} className="w-full size-fit object-contain max-h-[70dvh]"/>
+									<Image
+										src={"/qrcode.jpg"}
+										alt="qrcode"
+										width={450}
+										height={580}
+										className="w-full size-fit object-contain max-h-[70dvh]"
+									/>
 								</DialogDescription>
 							</DialogHeader>
 						</DialogContent>

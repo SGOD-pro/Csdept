@@ -1,14 +1,24 @@
 "use client";
-import React, { useEffect, lazy,Suspense } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import { motion } from "framer-motion";
-import { getAuthState, useAuthStore } from "../../store/authStore";
+import { getAuthState, useAuthStore } from "@/store/authStore";
 import { Vortex } from "../components/ui/vortex";
 const HyperText = lazy(() => import("@/components/magicui/hyper-text"));
-import { IconBrandGoogleFilled } from "@tabler/icons-react";
+dynamic;
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+const LoginBtn = dynamic(() => import("@/components/ui/LoginBtn"));
+const staggerContainer = {
+	hidden: { opacity: 1 },
+	show: { opacity: 1, transition: { staggerChildren: 0.4 } },
+};
 
+const staggerChild = {
+	hidden: { opacity: 0, y: 50 },
+	show: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+};
 export default function Home() {
-	const { signInWithGoogle, verifySession } = getAuthState();
+	const { verifySession } = getAuthState();
 	const { isVerified, isAdmin } = useAuthStore((state) => ({
 		isVerified: state.userPrefs?.isVerified,
 		isAdmin: state.userPrefs?.isAdmin,
@@ -31,7 +41,7 @@ export default function Home() {
 
 	if (isVerified) {
 		router.push("/home");
-		return null; 
+		return null;
 	}
 	if (isAdmin) {
 		router.push("/admin");
@@ -48,37 +58,39 @@ export default function Home() {
 				className="flex items-center flex-col justify-center px-2 md:px-10 py-4 w-full h-full"
 			>
 				<div className=" rounded-lg flex items-center flex-col p-4 h-[70dvh] sm:w-2/3 justify-center">
-				<Suspense fallback={<div className="animate-pulse h-[64px] w-72 rounded"></div>}>
-            <HyperText
-              className="text-4xl sm:text-5xl font-bold text-white"
-              text="The OG CS Dept"
-              duration={1.5}
-            />
-          </Suspense>
-					<motion.p
-						className="text-white text-sm md:text-2xl max-w-xl mt-6 text-center"
-						initial={{ opacity: 0, y: 50 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.5, ease: "easeOut", delay: 0.5,staggerChildren:.5 }}
+					<Suspense
+						fallback={
+							<div className="animate-pulse h-[64px] w-72 rounded"></div>
+						}
 					>
-						This is a deep dive into code. It&apos;ll push your limits, and
-						you&apos;ll emerge with skills that last a lifetime.
-					</motion.p>
-
-					{/* Animated Button */}
+						<HyperText
+							className="text-4xl sm:text-5xl font-bold text-white"
+							text="The OG CS Dept"
+							duration={1.5}
+						/>
+					</Suspense>
 					<motion.div
-						className="flex flex-col sm:flex-row items-center gap-4 mt-6"
-						initial={{ opacity: 0, y: 50 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.5, ease: "easeOut", delay: 0.5 }}
+						className=""
+						initial="hidden"
+						animate="show"
+						variants={staggerContainer}
+					
 					>
-						<button
-							className="px-4 py-2 bg-blue-600 hover:bg-blue-700 transition duration-200 rounded-lg text-white shadow-[0px_2px_0px_0px_#FFFFFF40_inset] flex items-center"
-							onClick={signInWithGoogle}
+						<motion.p
+							className="text-white text-sm md:text-2xl max-w-xl mt-6 text-center"
+							variants={staggerChild}
 						>
-							<IconBrandGoogleFilled />
-							<span className="">oogle</span>
-						</button>
+							Get ready for an unforgettable journey filled with excitement{","}{" "}
+							laughter{","} and lasting memories!
+						</motion.p>
+
+						{/* Animated Button */}
+						<motion.div
+							className="flex flex-col sm:flex-row items-center gap-4 mt-6"
+							variants={staggerChild}
+						>
+							<LoginBtn />
+						</motion.div>
 					</motion.div>
 				</div>
 			</Vortex>

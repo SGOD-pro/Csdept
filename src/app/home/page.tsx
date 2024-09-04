@@ -2,7 +2,7 @@
 import InputForm from "@/components/forms/registerForm";
 import { SparklesCore } from "@/components/magicui/sparkels";
 import Image from "next/image";
-import { useAuthStore } from "../../../store/authStore";
+import { useAuthStore } from "../../store/authStore";
 import { useRouter } from "next/navigation";
 import AnimatedGradientText from "@/components/magicui/animated-gradient-text";
 import React from "react";

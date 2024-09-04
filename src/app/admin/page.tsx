@@ -3,7 +3,7 @@ import React, { lazy } from "react";
 import dynamic from "next/dynamic";
 
 const DataTableDemo = dynamic(() => import("@/components/ui/Result"));
-import { getAuthState } from "../../../store/authStore";
+import { getAuthState } from "../../store/authStore";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
