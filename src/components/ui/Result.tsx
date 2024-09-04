@@ -185,7 +185,7 @@ export default function DataTableDemo() {
 	const HeaderComponent = React.memo(() => {
 		return (
 			<>
-				<div className="space-y-3 sm:space-y-0 flex gap-2">
+				<div className="space-y-3 sm:space-y-0 sm:flex gap-2">
 					<Input
 						placeholder="Filter name..."
 						value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
