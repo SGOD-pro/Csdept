@@ -31,7 +31,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { formSchama, FormSchema } from "@/schema/formSchema";
+import { formSchema, FormSchema } from "@/schema/formSchema";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
 	DropdownMenu,
@@ -78,7 +78,7 @@ export default function InputForm() {
 	const { user } = useAuthStore((state) => ({ user: state.user }));
 
 	const form = useForm<FormSchema>({
-		resolver: zodResolver(formSchama),
+		resolver: zodResolver(formSchema),
 		defaultValues: {
 			performanceName: [],
 			email: user?.email || "",
