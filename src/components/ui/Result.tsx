@@ -187,14 +187,13 @@ export default function DataTableDemo() {
 						value={(table.getColumn("year")?.getFilterValue() as string) ?? ""}
 					>
 						<SelectTrigger>
-							<SelectValue placeholder="Year" />
+							<SelectValue placeholder="Semister" />
 						</SelectTrigger>
 						<SelectContent>
 							<SelectItem value=" ">All</SelectItem>
-							<SelectItem value="1st year">1st Year</SelectItem>
-							<SelectItem value="2nd year">2nd Year</SelectItem>
-							<SelectItem value="3rd year">3rd Year</SelectItem>
-							<SelectItem value="4th year">4th Year</SelectItem>
+							<SelectItem value="1st sem">1st Sem</SelectItem>
+							<SelectItem value="3rd sem">3rd Sem</SelectItem>
+							<SelectItem value="5th sem">5th Sem</SelectItem>
 						</SelectContent>
 					</Select>
 				</div>
@@ -227,7 +226,7 @@ export default function DataTableDemo() {
 			</>
 		);
 	});
-	HeaderComponent.displayName="HeaderComponent";
+	HeaderComponent.displayName = "HeaderComponent";
 	return (
 		<div className="w-full">
 			<div className="flex items-center justify-end sm:justify-normal px-2 sm:py-0 py-4">

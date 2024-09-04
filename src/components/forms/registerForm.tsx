@@ -45,6 +45,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import React from "react";
 import { useAuthStore } from "../../../store/authStore";
 import FileInput from "../ui/FileInput";
+import Image from "next/image";
 
 const items = [
 	{
@@ -190,10 +191,9 @@ export default function InputForm() {
 						</DialogTrigger>
 						<DialogContent>
 							<DialogHeader>
-								<DialogTitle>Are you absolutely sure?</DialogTitle>
+								<DialogTitle>Rs: 100</DialogTitle>
 								<DialogDescription>
-									This action cannot be undone. This will permanently delete
-									your account and remove your data from our servers.
+									<Image src={"/qrcode.jpg"} alt="qrcode" width={450} height={580} className="w-full size-fit object-contain max-h-[70dvh]"/>
 								</DialogDescription>
 							</DialogHeader>
 						</DialogContent>
@@ -316,10 +316,10 @@ export default function InputForm() {
 				{/* Year Field */}
 				<FormField
 					control={form.control}
-					name="year"
+					name="semister"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Curent Year</FormLabel>
+							<FormLabel>Curent Semister</FormLabel>
 							<Select
 								onValueChange={field.onChange}
 								defaultValue={field.value}
@@ -331,10 +331,9 @@ export default function InputForm() {
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
-									<SelectItem value="1st year">1st Year</SelectItem>
-									<SelectItem value="2nd year">2nd Year</SelectItem>
-									<SelectItem value="3rd year">3rd Year</SelectItem>
-									<SelectItem value="4th year">4th Year</SelectItem>
+									<SelectItem value="1st sem">1st Sem</SelectItem>
+									<SelectItem value="3rd sem">3rd Sem</SelectItem>
+									<SelectItem value="5th sem">5th Sem</SelectItem>
 								</SelectContent>
 							</Select>
 							<FormMessage />

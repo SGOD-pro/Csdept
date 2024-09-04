@@ -18,7 +18,7 @@ export const formSchama = z.object({
 		.refine((value) => value.some((item) => item), {
 			message: "You have to select at least one item.",
 		}),
-	year: z.string(),
+	semister: z.string(),
 });
 
 export type FormSchema = z.infer<typeof formSchama>;
