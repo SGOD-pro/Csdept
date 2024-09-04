@@ -86,6 +86,13 @@ export default function InputForm() {
 	});
 	const fileInputRef = React.useRef<HTMLInputElement>(null);
 	async function onSubmit(data: FormSchema) {
+		if (data.semister === "online"&&!data.paymentPhoto) {
+			toast({
+				title: "Please add payment photo",
+				description: "Payment photo is required for online payment.",
+			});
+			
+		}
 		setDisable(true);
 		const resonse = await formSubmit(data);
 		if (resonse.success) {
