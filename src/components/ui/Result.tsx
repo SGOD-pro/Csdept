@@ -18,8 +18,7 @@ import {
 	getSortedRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
-import { Switch } from "@/components/ui/switch";
-import { fetchAllRecords, Result, togglePaid } from "@/hooks/FormSubmit";
+import { fetchAllRecords, Result } from "@/hooks/FormSubmit";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -27,8 +26,6 @@ import {
 	DropdownMenuCheckboxItem,
 	DropdownMenuContent,
 	DropdownMenuTrigger,
-	DropdownMenuItem,
-	DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
@@ -55,7 +52,8 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-export const columns: ColumnDef<Result>[] = [
+import PaidCell from "../magicui/PaidCell";
+export const Columns: ColumnDef<Result>[] = [
 	{
 		id: "select",
 		header: ({ table }) => (
@@ -143,22 +141,7 @@ export const columns: ColumnDef<Result>[] = [
 	},
 	{
 		header: "Paid",
-		cell: ({ row }) => {
-			const data = row.original;
-			const [disable, setdisable] = React.useState(false);
-			async function paid(e: boolean) {
-				setdisable(true);
-				data.isPaid = await togglePaid(data.docId, e);
-				setdisable(false);
-			}
-			return (
-				<Switch
-					checked={data.isPaid}
-					onCheckedChange={paid}
-					disabled={disable}
-				/>
-			);
-		},
+		cell: ({ row }) => <PaidCell data={row.original} />,
 	},
 ];
 
@@ -182,7 +165,7 @@ export default function DataTableDemo() {
 	}, []);
 	const table = useReactTable({
 		data,
-		columns,
+		columns:Columns,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
 		getCoreRowModel: getCoreRowModel(),
@@ -341,7 +324,7 @@ export default function DataTableDemo() {
 						) : (
 							<TableRow>
 								<TableCell
-									colSpan={columns.length}
+									colSpan={Columns.length}
 									className="h-24 text-center"
 								>
 									No results.
