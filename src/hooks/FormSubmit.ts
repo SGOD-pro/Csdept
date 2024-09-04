@@ -33,7 +33,7 @@ export async function submit(value: FormSchema): Promise<{ success: boolean }> {
 			qrcode: photoURL?.fileURL || null,
 			paymentMode: value.paymentMode,
 			rollNo: value.rollNo,
-			year: value.year,
+			semister: value.semister,
 			createdAt: serverTimestamp(),
 			uid: user.uid,
 		});
@@ -61,7 +61,7 @@ export async function fetchAllRecords() {
 			performanceName: doc.data().performanceName,
 			paymentMode: doc.data().paymentMode,
 			rollNo: doc.data().rollNo,
-			year: doc.data().year,
+			semister: doc.data().semister,
 			qrcode: doc.data().qrcode,
 		}));
 		return records;
