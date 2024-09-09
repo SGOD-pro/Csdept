@@ -196,10 +196,10 @@ export default function DataTableDemo() {
 					/>
 					<Select
 						onValueChange={(event) =>
-							table.getColumn("semister")?.setFilterValue(event)
+							table.getColumn("paymentMode")?.setFilterValue(event)
 						}
 						value={
-							(table.getColumn("semister")?.getFilterValue() as string) ?? ""
+							(table.getColumn("paymentMode")?.getFilterValue() as string) ?? ""
 						}
 					>
 						<SelectTrigger>
@@ -334,7 +334,7 @@ export default function DataTableDemo() {
 					</TableBody>
 				</Table>
 			</div>
-			<div className="flex items-center space-x-2 py-4 border">
+			<div className="flex items-center space-x-2 py-4 ">
 				<div className="text-sm text-muted-foreground">
 					{table.getFilteredSelectedRowModel().rows.length} of{" "}
 					{table.getFilteredRowModel().rows.length} row(s) selected.

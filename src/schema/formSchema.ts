@@ -22,7 +22,7 @@ export const formSchema = z
 	})
 	.refine(
 		(data) => {
-			if (data.paymentMode === "online") {
+			if (data.paymentMode === "Online") {
 				return data.paymentPhoto !== undefined && data.paymentPhoto !== null;
 			}
 			return true;
