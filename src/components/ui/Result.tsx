@@ -185,7 +185,7 @@ export default function DataTableDemo() {
 	const HeaderComponent = React.memo(() => {
 		return (
 			<>
-				<div className="space-y-3 sm:space-y-0 sm:flex gap-2">
+				<div className="space-y-3 sm:space-y-0 sm:flex gap-2 relative z-10">
 					<Input
 						placeholder="Filter name..."
 						value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -264,7 +264,7 @@ export default function DataTableDemo() {
 	return (
 		<div className="w-full">
 			<div className="flex items-center justify-end sm:justify-normal px-2 sm:py-0 py-4">
-				<div className="gap-2 hidden sm:flex justify-between w-full">
+				<div className="gap-2 hidden sm:flex justify-between w-full relative z-10">
 					<HeaderComponent />
 				</div>
 				<Dialog>
@@ -277,7 +277,7 @@ export default function DataTableDemo() {
 					<DialogContent>
 						<DialogHeader>
 							<DialogTitle>Filters</DialogTitle>
-							<DialogDescription className="space-y-3 px-4 sm:p-0">
+							<DialogDescription className="space-y-3 px-4 sm:p-0 relative z-10">
 								<HeaderComponent />
 							</DialogDescription>
 						</DialogHeader>
@@ -334,8 +334,8 @@ export default function DataTableDemo() {
 					</TableBody>
 				</Table>
 			</div>
-			<div className="flex items-center justify-end space-x-2 py-4">
-				<div className="flex-1 text-sm text-muted-foreground">
+			<div className="flex items-center space-x-2 py-4 border">
+				<div className="text-sm text-muted-foreground">
 					{table.getFilteredSelectedRowModel().rows.length} of{" "}
 					{table.getFilteredRowModel().rows.length} row(s) selected.
 				</div>
